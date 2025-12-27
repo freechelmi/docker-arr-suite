@@ -81,7 +81,7 @@ services:
       - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
       - traefik.http.routers.prowlarr.entrypoints=websecure
       - traefik.http.services.prowlarr.loadbalancer.server.port=9696
-    depends_on:s
+    depends_on:
       traefik:
         condition: service_healthy
         restart: true
