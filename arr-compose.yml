@@ -12,7 +12,6 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     restart: always
-    network_mode: service:gluetun
     env_file: ./env/arr.env
     volumes:
       - sonarr:/config
@@ -28,9 +27,6 @@ services:
       - traefik.http.routers.sonarr.entrypoints=websecure
       - traefik.http.services.sonarr.loadbalancer.server.port=8989
     depends_on:
-      gluetun:
-        condition: service_healthy
-        restart: true
       traefik:
         condition: service_healthy
         restart: true
@@ -44,7 +40,6 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     restart: always
-    network_mode: service:gluetun
     env_file: ./env/arr.env
     volumes:
       - radarr:/config
@@ -60,9 +55,6 @@ services:
       - traefik.http.routers.radarr.entrypoints=websecure
       - traefik.http.services.radarr.loadbalancer.server.port=7878
     depends_on:
-      gluetun:
-        condition: service_healthy
-        restart: true
       traefik:
         condition: service_healthy
         restart: true
@@ -75,7 +67,6 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: always
-    network_mode: service:gluetun
     env_file: ./env/arr.env
     volumes: 
       - prowlarr:/config
@@ -90,10 +81,7 @@ services:
       - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
       - traefik.http.routers.prowlarr.entrypoints=websecure
       - traefik.http.services.prowlarr.loadbalancer.server.port=9696
-    depends_on:
-      gluetun:
-        condition: service_healthy
-        restart: true
+    depends_on:s
       traefik:
         condition: service_healthy
         restart: true
@@ -135,36 +123,17 @@ networks:
 
 volumes:
   data: # Sonarr, Radarr, Prowlarr, and Unpackerr data mount
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},rw,tcp,nolock,hard,wsize=65536,rsize=65536"
-      device: ":${NFS_VOLUME}/data"
-
+   
   sonarr: # Sonarr app data.
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},rw,tcp,nolock,hard,wsize=65536,rsize=65536"
-      device: ":${NFS_VOLUME}/docker_data/sonarr"
+   
 
   radarr: # Radarr app data.
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},rw,tcp,nolock,hard,wsize=65536,rsize=65536"
-      device: ":${NFS_VOLUME}/docker_data/radarr"
+  
+   
 
   prowlarr: # Prowlarr app data.
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},rw,tcp,nolock,hard,wsize=65536,rsize=65536"
-      device: ":${NFS_VOLUME}/docker_data/prowlarr"
+   
+    
 
   unpackerr: # unPackerr app data.
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},rw,tcp,nolock,hard,wsize=65536,rsize=65536"
-      device: ":${NFS_VOLUME}/docker_data/unpackerr"
+   

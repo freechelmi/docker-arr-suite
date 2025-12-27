@@ -5,10 +5,6 @@ secrets:
     file: ./secrets/cloudflare-token.secret
   cloudflare-email:
     file: ./secrets/cloudflare-email.secret
-  openvpn_user:
-    file: ./secrets/openvpn_user.secret
-  openvpn_password:
-    file: ./secrets/openvpn_password.secret
 
 services:
   traefik:
@@ -54,22 +50,6 @@ services:
       timeout: 3s
       start_period: 60s
 
-  gluetun:
-    # See more: https://github.com/qdm12/gluetun-wiki
-    image: qmcgaw/gluetun
-    container_name: gluetun
-    restart: always
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    secrets:
-      - openvpn_user
-      - openvpn_password
-    env_file: ./env/gluetun.env
-    volumes:
-      - gluetun:/gluetun
-
   watchtower:
     # See more: https://github.com/containrrr/watchtower
     image: containrrr/watchtower
@@ -82,7 +62,7 @@ include:
   - bittorrent-compose.yml
   - arr-compose.yml
 #  - plex-compose.yml
-#  - jellyfin-compose.yml
+  - jellyfin-compose.yml
 
 networks:
   default:
@@ -92,15 +72,4 @@ networks:
 
 volumes:
   letsencrypt: # Traefik Lets Encrypt certs.
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},rw,tcp,nolock,hard,wsize=65536,rsize=65536"
-      device: ":${NFS_VOLUME}/docker_data/letsencrypt"
-
-  gluetun: # Gluetun app data.
-    driver: local
-    driver_opts:
-      type: "nfs"
-      o: "addr=${NFS_SERVER},rw,tcp,nolock,hard,wsize=65536,rsize=65536"
-      device: ":${NFS_VOLUME}/docker_data/gluetun"
+  media: 
