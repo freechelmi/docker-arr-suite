@@ -11,11 +11,11 @@ case "$1" in
         sudo docker compose up -d 
         ;;
     down)
-        sudo docker compose down -v
+        sudo docker compose down
         ;;
     upgrade)
         sudo docker compose pull
-        sudo docker compose down -v
+        sudo docker compose down
         sudo docker compose up -d
         ;;
     init)
